@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6366f1">
+<title>Apk — متجر التطبيقات العربي</title>
+<style>
+/* ============= Reset ============= */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+button,input,select{font:inherit;color:inherit;border:0;background:none;outline:none}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+img,svg{display:block;max-width:100%}
+
+/* ============= Variables ============= */
+:root{
+  --brand:#6366f1;--brand-2:#8b5cf6;--brand-3:#ec4899;
+  --bg:#f4f6fb;--surface:#fff;--surface-2:#f8fafc;--surface-3:#eef1f8;
+  --border:#e5e8f0;--text:#0f172a;--text-2:#475569;--muted:#94a3b8;
+  --ok:#10b981;--warn:#f59e0b;--danger:#ef4444;--star:#fbbf24;
+  --shadow-sm:0 2px 8px rgba(15,23,42,.06);
+  --shadow:0 8px 30px rgba(15,23,42,.10);
+  --shadow-lg:0 24px 60px rgba(15,23,42,.20);
+  --r-sm:10px;--r:14px;--r-lg:20px;--r-xl:28px;
+  --hdr:64px;--nav:64px;
+  --grad:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#ec4899 100%);
+}
+html[data-theme="dark"]{
+  --bg:#0a0f1c;--surface:#131a2b;--surface-2:#1a2238;--surface-3:#222c47;
+  --border:#26304a;--text:#eef2fa;--text-2:#a8b3cc;--muted:#64748b;
+  --shadow-sm:0 2px 8px rgba(0,0,0,.30);
+  --shadow:0 8px 30px rgba(0,0,0,.45);
+  --shadow-lg:0 24px 60px rgba(0,0,0,.60);
+}
+html{scroll-behavior:smooth}
+body{
+  font:15px/1.65 system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
+  background:var(--bg);color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:calc(var(--nav) + 12px);
+  overflow-x:hidden;
+  transition:background .3s,color .3s;
+}
+
+/* ============= Header ============= */
+.hdr{
+  position:sticky;top:0;z-index:50;
+  height:var(--hdr);
+  display:flex;align-items:center;gap:12px;
+  padding:0 16px;
+  background:color-mix(in srgb,var(--surface) 85%,transparent);
+  backdrop-filter:blur(18px) saturate(180%);
+  -webkit-backdrop-filter:blur(18px) saturate(180%);
+  border-bottom:1px solid var(--border);
+}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.brand-icon{
+  width:38px;height:38px;border-radius:12px;
+  background:var(--grad);
+  display:grid;place-items:center;
+  color:#fff;font-weight:800;font-size:18px;
+  box-shadow:0 6px 18px rgba(99,102,241,.45);
+}
+.brand-name{font-weight:800;font-size:18px;letter-spacing:-.3px;line-height:1}
+.brand-name small{display:block;font-weight:400;font-size:10px;color:var(--muted);letter-spacing:0;margin-top:2px}
+
+.search-wrap{
+  flex:1;max-width:520px;position:relative;
+  display:flex;align-items:center;
+}
+.search-wrap svg{position:absolute;inset-inline-start:14px;width:18px;height:18px;color:var(--muted);pointer-events:none}
+#search{
+  width:100%;height:42px;
+  padding:0 40px 0 42px;
+  background:var(--surface-2);
+  border:1.5px solid var(--border);
+  border-radius:999px;
+  font-size:14px;
+  transition:border-color .2s,box-shadow .2s;
+}
+#search:focus{border-color:var(--brand);box-shadow:0 0 0 4px rgba(99,102,241,.15)}
+html[dir="rtl"] #search{padding:0 42px 0 40px}
+.search-clear{
+  position:absolute;inset-inline-end:8px;
+  width:26px;height:26px;border-radius:50%;
+  display:none;place-items:center;
+  background:var(--surface-3);color:var(--muted);font-size:16px;
+}
+.search-clear.show{display:grid}
+.search-suggest{
+  position:absolute;top:calc(100% + 8px);inset-inline:0;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);box-shadow:var(--shadow-lg);
+  overflow:hidden;display:none;max-height:340px;overflow-y:auto;z-index:5;
+}
+.search-suggest.show{display:block}
+.sug-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;font-size:14px;cursor:pointer;
+  border-bottom:1px solid var(--border);
+}
+.sug-item:last-child{border-bottom:0}
+.sug-item:hover{background:var(--surface-2)}
+.sug-item svg{width:16px;height:16px;color:var(--muted);flex-shrink:0}
+.sug-item b{color:var(--brand)}
+
+.hdr-actions{display:flex;gap:6px;flex-shrink:0}
+.icon-btn{
+  width:42px;height:42px;border-radius:12px;
+  display:grid;place-items:center;
+  background:var(--surface-2);border:1.5px solid var(--border);
+  color:var(--text-2);position:relative;
+  transition:all .2s;
+}
+.icon-btn:hover{background:var(--surface-3);color:var(--brand);border-color:var(--brand)}
+.icon-btn svg{width:20px;height:20px}
+.icon-btn .badge{
+  position:absolute;top:-4px;inset-inline-end:-4px;
+  min-width:18px;height:18px;padding:0 5px;
+  background:var(--danger);color:#fff;
+  border-radius:999px;font-size:10px;font-weight:700;
+  display:grid;place-items:center;
+  border:2px solid var(--surface);
+}
+
+/* ============= Main ============= */
+main{max-width:1240px;margin:0 auto;padding:22px 16px 40px}
+
+/* Hero */
+.hero{
+  position:relative;border-radius:var(--r-xl);
+  background:var(--grad);
+  padding:32px;overflow:hidden;
+  color:#fff;
+  box-shadow:0 20px 60px -20px rgba(99,102,241,.65);
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 90% 10%,rgba(255,255,255,.25),transparent 55%);
+  pointer-events:none;
+}
+.hero-inner{position:relative;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.hero-icon{
+  width:100px;height:100px;border-radius:24px;
+  background:rgba(255,255,255,.22);
+  backdrop-filter:blur(12px);
+  display:grid;place-items:center;
+  font-size:48px;font-weight:800;
+  border:2px solid rgba(255,255,255,.35);
+  flex-shrink:0;
+}
+.hero-text{flex:1;min-width:240px}
+.hero-tag{
+  display:inline-block;
+  background:rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.35);
+  padding:4px 12px;border-radius:999px;
+  font-size:12px;font-weight:700;margin-bottom:10px;
+}
+.hero-text h1{font-size:30px;font-weight:800;line-height:1.2;margin-bottom:6px}
+.hero-text p{opacity:.9;font-size:14px;margin-bottom:14px}
+.hero-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;opacity:.95;margin-bottom:18px}
+.hero-meta b{font-weight:700}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 22px;border-radius:12px;
+  font-weight:700;font-size:14px;
+  transition:transform .15s,box-shadow .2s,background .2s;
+}
+.btn:active{transform:scale(.97)}
+.btn svg{width:16px;height:16px}
+.btn-primary{background:#fff;color:var(--brand);box-shadow:0 8px 20px rgba(0,0,0,.20)}
+.btn-primary:hover{box-shadow:0 12px 28px rgba(0,0,0,.28)}
+.btn-ghost{background:rgba(255,255,255,.18);color:#fff;border:1.5px solid rgba(255,255,255,.4)}
+.btn-ghost:hover{background:rgba(255,255,255,.28)}
+.btn-solid{background:var(--brand);color:#fff;box-shadow:0 8px 20px -6px var(--brand)}
+.btn-solid:hover{background:var(--brand-2)}
+.btn-outline{background:var(--surface-2);color:var(--text);border:1.5px solid var(--border)}
+.btn-outline:hover{border-color:var(--brand);color:var(--brand)}
+
+/* Categories */
+.cats-row{
+  display:flex;gap:8px;overflow-x:auto;
+  padding:20px 0 4px;margin-bottom:4px;
+  scrollbar-width:none;
+}
+.cats-row::-webkit-scrollbar{display:none}
+.chip{
+  flex-shrink:0;
+  padding:8px 16px;border-radius:999px;
+  background:var(--surface);border:1.5px solid var(--border);
+  font-size:13px;font-weight:600;color:var(--text-2);
+  display:inline-flex;align-items:center;gap:6px;
+  transition:all .2s;white-space:nowrap;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 6px 16px -4px var(--brand)}
+.chip svg{width:14px;height:14px}
+
+/* Section */
+.sec{margin-top:32px}
+.sec-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:16px;
+}
+.sec-head h2{
+  font-size:19px;font-weight:800;
+  display:flex;align-items:center;gap:8px;
+}
+.sec-head h2 svg{width:20px;height:20px;color:var(--brand)}
+.sec-link{
+  font-size:13px;font-weight:700;color:var(--brand);
+  display:inline-flex;align-items:center;gap:4px;
+}
+.sec-link:hover{text-decoration:underline}
+
+/* Top charts */
+.chart-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:10px;
+}
+.chart-item{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 14px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);cursor:pointer;
+  transition:transform .15s,border-color .2s,box-shadow .2s;
+}
+.chart-item:hover{transform:translateY(-2px);border-color:var(--brand);box-shadow:var(--shadow)}
+.rank{
+  font-size:20px;font-weight:900;
+  color:var(--muted);width:26px;text-align:center;flex-shrink:0;
+  font-variant-numeric:tabular-nums;
+}
+.rank.top{color:var(--brand)}
+.app-icon{
+  width:52px;height:52px;border-radius:14px;
+  display:grid;place-items:center;
+  color:#fff;font-weight:800;font-size:22px;
+  flex-shrink:0;
+  box-shadow:0 6px 16px -4px currentColor;
+  position:relative;overflow:hidden;
+}
+.app-icon::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.35),transparent 60%);
+}
+.app-icon.lg{width:84px;height:84px;border-radius:22px;font-size:36px}
+.app-icon.sm{width:40px;height:40px;border-radius:11px;font-size:17px}
+.app-info{flex:1;min-width:0}
+.app-info h3{
+  font-size:14px;font-weight:700;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.app-info .dev{
+  font-size:12px;color:var(--muted);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.app-meta{
+  display:flex;align-items:center;gap:6px;
+  font-size:11.5px;color:var(--text-2);margin-top:3px;
+}
+.app-meta .star{color:var(--star);font-weight:700}
+.app-meta .dot{color:var(--muted)}
+
+/* Horizontal scroll */
+.h-scroll{
+  display:flex;gap:12px;overflow-x:auto;
+  padding-bottom:10px;scroll-snap-type:x mandatory;
+  scrollbar-width:thin;
+}
+.h-scroll::-webkit-scrollbar{height:6px}
+.h-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.h-card{
+  flex:0 0 200px;scroll-snap-align:start;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:16px;cursor:pointer;
+  transition:transform .18s,border-color .2s,box-shadow .2s;
+  display:flex;flex-direction:column;gap:10px;position:relative;
+}
+.h-card:hover{transform:translateY(-4px);border-color:var(--brand);box-shadow:var(--shadow)}
+.h-card .app-icon{align-self:flex-start}
+.h-card h3{font-size:14px;font-weight:700}
+.h-card .dev{font-size:12px;color:var(--muted);margin-top:-4px}
+.h-card .badge-new{
+  position:absolute;top:12px;inset-inline-end:12px;
+  font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;
+  background:var(--ok);color:#fff;
+}
+.h-card .badge-editor{
+  position:absolute;top:12px;inset-inline-end:12px;
+  font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;
+  background:var(--grad);color:#fff;
+}
+
+/* Grid */
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:12px;
+}
+.app-card{
+  position:relative;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:14px;
+  display:flex;gap:12px;align-items:flex-start;
+  cursor:pointer;
+  transition:transform .15s,border-color .2s,box-shadow .2s;
+}
+.app-card:hover{transform:translateY(-3px);border-color:var(--brand);box-shadow:var(--shadow)}
+.fav-btn{
+  position:absolute;top:10px;inset-inline-end:10px;
+  width:30px;height:30px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--border);
+  color:var(--muted);font-size:14px;
+  transition:all .2s;
+}
+.fav-btn:hover{border-color:var(--danger);color:var(--danger)}
+.fav-btn.on{background:var(--danger);border-color:var(--danger);color:#fff}
+
+/* Empty state */
+.empty{
+  text-align:center;padding:60px 20px;color:var(--muted);
+}
+.empty svg{width:64px;height:64px;margin:0 auto 14px;color:var(--border)}
+.empty h3{font-size:17px;color:var(--text);margin-bottom:6px}
+.empty p{font-size:13px}
+
+/* Sort */
+.toolbar{
+  display:flex;align-items:center;gap:10px;
+  flex-wrap:wrap;margin-bottom:14px;
+}
+.select{
+  padding:9px 14px;border-radius:12px;
+  background:var(--surface);border:1.5px solid var(--border);
+  font-size:13px;font-weight:600;cursor:pointer;
+}
+.select:focus{border-color:var(--brand)}
+.count-badge{
+  font-size:12px;color:var(--muted);margin-inline-start:auto;
+}
+
+/* ============= Bottom nav ============= */
+.bnav{
+  position:fixed;bottom:0;left:0;right:0;z-index:45;
+  height:var(--nav);
+  background:color-mix(in srgb,var(--surface) 92%,transparent);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-top:1px solid var(--border);
+  display:flex;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.bnav button{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;font-size:11px;font-weight:600;color:var(--muted);
+  transition:color .2s;position:relative;
+}
+.bnav button svg{width:22px;height:22px;transition:transform .2s}
+.bnav button.on{color:var(--brand)}
+.bnav button.on svg{transform:translateY(-2px) scale(1.08)}
+.bnav button .bnav-badge{
+  position:absolute;top:6px;inset-inline-end:calc(50% - 18px);
+  min-width:16px;height:16px;padding:0 4px;
+  background:var(--danger);color:#fff;
+  border-radius:999px;font-size:9px;font-weight:800;
+  display:grid;place-items:center;
+}
+
+/* ============= Modal ============= */
+.modal{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(10,15,28,.65);
+  backdrop-filter:blur(6px);
+  display:none;align-items:flex-end;justify-content:center;
+  padding:0;
+  animation:fadeIn .2s;
+}
+.modal.open{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-panel{
+  background:var(--surface);
+  width:min(640px,100%);
+  max-height:92vh;
+  border-radius:var(--r-xl) var(--r-xl) 0 0;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  animation:slideUp .3s cubic-bezier(.2,.9,.3,1.1);
+  box-shadow:var(--shadow-lg);
+}
+@media(min-width:640px){
+  .modal{align-items:center;padding:24px}
+  .modal-panel{border-radius:var(--r-xl);max-height:88vh}
+}
+.modal-head{
+  padding:22px;position:relative;color:#fff;
+  background:var(--grad);
+}
+.modal-close{
+  position:absolute;top:14px;inset-inline-end:14px;
+  width:36px;height:36px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.22);color:#fff;
+  border:1px solid rgba(255,255,255,.35);
+}
+.modal-close:hover{background:rgba(255,255,255,.35)}
+.modal-app{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.modal-app .app-icon{background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.35);box-shadow:none}
+.modal-app-info{flex:1;min-width:180px}
+.modal-app-info h2{font-size:22px;font-weight:800;line-height:1.2}
+.modal-app-info .dev{font-size:13px;opacity:.9;margin-top:2px}
+.modal-stats{
+  display:flex;gap:20px;margin-top:14px;padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.25);
+  flex-wrap:wrap;
+}
+.modal-stats > div{text-align:center;flex:1;min-width:70px}
+.modal-stats b{display:block;font-size:15px;font-weight:800}
+.modal-stats span{font-size:11px;opacity:.85}
+
+.modal-actions{display:flex;gap:10px;padding:16px 22px 0;flex-wrap:wrap}
+.modal-actions .btn{flex:1;justify-content:center;min-width:130px}
+
+.install-bar{
+  height:6px;background:var(--surface-3);border-radius:999px;
+  margin:0 22px;overflow:hidden;display:none;
+}
+.install-bar.show{display:block}
+.install-bar span{display:block;height:100%;width:0;background:var(--grad);border-radius:999px;transition:width .3s}
+
+.modal-body{
+  padding:22px;overflow-y:auto;flex:1;
+}
+.modal-body::-webkit-scrollbar{width:8px}
+.modal-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+.shots{
+  display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;
+  scrollbar-width:thin;margin-bottom:22px;
+}
+.shots::-webkit-scrollbar{height:6px}
+.shots::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.shot{
+  flex:0 0 140px;height:240px;border-radius:var(--r);
+  box-shadow:var(--shadow-sm);
+  position:relative;overflow:hidden;
+}
+.shot::before{
+  content:attr(data-label);
+  position:absolute;inset:auto 0 0 0;padding:8px 10px;
+  background:linear-gradient(transparent,rgba(0,0,0,.6));
+  color:#fff;font-size:11px;font-weight:700;
+}
+.shot::after{
+  content:"";position:absolute;inset:12px;
+  border-radius:8px;border:2px dashed rgba(255,255,255,.3);
+}
+
+.blk-title{
+  font-size:14px;font-weight:800;color:var(--text);
+  margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+.blk-title svg{width:16px;height:16px;color:var(--brand)}
+.blk{margin-bottom:22px}
+.blk p{font-size:13.5px;color:var(--text-2);line-height:1.75}
+
+.info-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+}
+.info-item{
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:var(--r);padding:10px 12px;
+}
+.info-item span{font-size:11px;color:var(--muted);display:block}
+.info-item b{font-size:13px;font-weight:700;color:var(--text)}
+
+.rev{
+  display:flex;gap:10px;padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.rev:last-child{border-bottom:0}
+.rev-avatar{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;
+}
+.rev-body{flex:1;min-width:0}
+.rev-body header{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.rev-body header b{font-size:13px}
+.rev-body header time{font-size:11px;color:var(--muted);margin-inline-start:auto}
+.rev-stars{color:var(--star);font-size:11px;margin-bottom:3px}
+.rev-body p{font-size:12.5px;color:var(--text-2);line-height:1.6}
+
+.rel-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.rel-row::-webkit-scrollbar{height:5px}
+.rel-row::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.rel-card{
+  flex:0 0 130px;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:var(--r);
+  padding:12px;text-align:center;cursor:pointer;
+  transition:all .2s;
+}
+.rel-card:hover{border-color:var(--brand);transform:translateY(-2px)}
+.rel-card .app-icon{margin:0 auto 8px}
+.rel-card b{font-size:12.5px;font-weight:700;display:block;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rel-card span{font-size:10.5px;color:var(--muted)}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:calc(var(--nav) + 20px);inset-inline-start:50%;
+  transform:translateX(50%) translateY(20px);
+  background:var(--text);color:var(--bg);
+  padding:12px 20px;border-radius:999px;
+  font-size:13.5px;font-weight:700;
+  box-shadow:var(--shadow-lg);z-index:200;
+  opacity:0;pointer-events:none;
+  transition:all .3s cubic-bezier(.2,.9,.3,1.1);
+  display:flex;align-items:center;gap:8px;
+  max-width:min(90vw,380px);
+}
+html[dir="rtl"] .toast{transform:translateX(50%) translateY(20px)}
+.toast.show{opacity:1;transform:translateX(50%) translateY(0)}
+.toast svg{width:16px;height:16px;flex-shrink:0}
+
+/* To top */
+.to-top{
+  position:fixed;bottom:calc(var(--nav) + 20px);inset-inline-end:20px;
+  width:46px;height:46px;border-radius:50%;
+  background:var(--brand);color:#fff;
+  display:grid;place-items:center;z-index:40;
+  box-shadow:0 12px 30px -8px var(--brand);
+  opacity:0;pointer-events:none;transform:translateY(20px);
+  transition:all .3s;
+}
+.to-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+.to-top:hover{background:var(--brand-2)}
+
+/* Footer */
+footer{
+  text-align:center;padding:36px 20px 24px;
+  color:var(--muted);font-size:12.5px;
+  border-top:1px solid var(--border);margin-top:40px;
+}
+footer .brand-mini{
+  display:inline-flex;align-items:center;gap:8px;
+  font-weight:800;color:var(--text);margin-bottom:8px;font-size:15px;
+}
+footer .brand-mini i{
+  width:22px;height:22px;border-radius:6px;
+  background:var(--grad);display:grid;place-items:center;
+  color:#fff;font-style:normal;font-size:12px;font-weight:800;
+}
+footer .links{
+  display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin:12px 0;
+}
+footer .links a:hover{color:var(--brand)}
+
+/* Skeleton */
+.skel{
+  background:linear-gradient(90deg,var(--surface-2) 25%,var(--surface-3) 50%,var(--surface-2) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s infinite linear;
+  border-radius:var(--r);
+}
+@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+
+/* Responsive */
+@media(max-width:720px){
+  .hdr{padding:0 10px;gap:8px}
+  .brand-name{display:none}
+  .hero{padding:22px;border-radius:var(--r-lg)}
+  .hero-icon{width:70px;height:70px;font-size:32px;border-radius:18px}
+  .hero-text h1{font-size:22px}
+  .hero-text p{font-size:13px}
+  .sec-head h2{font-size:17px}
+  .modal-app-info h2{font-size:18px}
+}
+@media(max-width:480px){
+  .grid{grid-template-columns:1fr}
+  .info-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ============= SVG Sprite ============= -->
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></symbol>
+  <symbol id="i-heart-fill" viewBox="0 0 24 24" fill="currentColor"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.5 7 .9-5 4.9 1.2 7-6.2-3.3L5.8 21.3 7 14.3l-5-4.9 7-.9Z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2h-4v-6h-6v6H5a2 2 0 0 1-2-2Z"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-fire" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3 4 4 4 8a4 4 0 0 1-8 0c0-1.5.7-2.7 1.5-3.5C10.7 9 12 7 12 3Z"/><path d="M12 22a7 7 0 0 0 7-7c0-3-2-5-3.5-6.5"/><path d="M12 22a7 7 0 0 1-7-7c0-3 2-5 3.5-6.5"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="m8.5 13-1.5 8L12 19l5 2-1.5-8"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8Z"/><path d="M19 15v4M17 17h4"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-android" viewBox="0 0 24 24" fill="currentColor"><path d="M6 9h12a1 1 0 0 1 1 1v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7a1 1 0 0 1 1-1Zm-2.5 1a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0v-5a1 1 0 0 1 1-1Zm17 0a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0v-5a1 1 0 0 1 1-1ZM8 3.5 7 2m9 1.5L17 2M6.5 8a5.5 5.5 0 0 1 11 0Zm3 3.5h.01M14.5 11.5h.01"/></symbol>
+</svg>
+
+<!-- ============= Header ============= -->
+<header class="hdr">
+  <a class="brand" href="#top" aria-label="Apk">
+    <div class="brand-icon">A</div>
+    <div class="brand-name">Apk<small>متجر التطبيقات العربي</small></div>
+  </a>
+
+  <div class="search-wrap">
+    <svg><use href="#i-search"/></svg>
+    <input id="search" type="search" placeholder="ابحث عن تطبيق، لعبة، أو مطوّر..." autocomplete="off" aria-label="بحث">
+    <button class="search-clear" id="searchClear" aria-label="مسح">×</button>
+    <div class="search-suggest" id="suggest"></div>
+  </div>
+
+  <div class="hdr-actions">
+    <button class="icon-btn" id="themeBtn" aria-label="تبديل الثيم">
+      <svg id="themeIcon"><use href="#i-moon"/></svg>
+    </button>
+    <button class="icon-btn" id="favBtn" aria-label="المفضلة">
+      <svg><use href="#i-heart"/></svg>
+      <span class="badge" id="favCount" style="display:none">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ============= Main ============= -->
+<main id="top">
+  <div id="dynamicArea"></div>
+</main>
+
+<!-- ============= Bottom Nav ============= -->
+<nav class="bnav" aria-label="التنقل">
+  <button data-view="home" class="on"><svg><use href="#i-home"/></svg><span>الرئيسية</span></button>
+  <button data-view="categories"><svg><use href="#i-grid"/></svg><span>التصنيفات</span></button>
+  <button data-view="trending"><svg><use href="#i-fire"/></svg><span>رائج</span></button>
+  <button data-view="favorites"><svg><use href="#i-heart"/></svg><span>المفضلة</span><span class="bnav-badge" id="bnavBadge" style="display:none">0</span></button>
+</nav>
+
+<!-- ============= Modal ============= -->
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-panel" id="modalPanel"></div>
+</div>
+
+<!-- ============= Toast ============= -->
+<div class="toast" id="toast"></div>
+
+<!-- ============= To Top ============= -->
+<button class="to-top" id="toTop" aria-label="أعلى"><svg><use href="#i-arrow-up"/></svg></button>
+
+<footer>
+  <div class="brand-mini"><i>A</i> Apk</div>
+  <div class="links">
+    <a href="#top">الرئيسية</a>
+    <a href="#top">التصنيفات</a>
+    <a href="#top">رائج</a>
+    <a href="#top">اتصل بنا</a>
+  </div>
+  <p>© 2026 Apk — متجر التطبيقات العربي. كل الحقوق محفوظة.</p>
+</footer>
+
+<script>
+/* =====================================================
+   Apk — متجر التطبيقات العربي
+   ملف واحد، بدون موارد خارجية
+   ===================================================== */
+
+/* ---------- Safe Storage ---------- */
+const store = (() => {
+  try {
+    localStorage.setItem('__t','1');
+    localStorage.removeItem('__t');
+    return localStorage;
+  } catch(e) {
+    const mem = {};
+    return {
+      getItem: k => (k in mem ? mem[k] : null),
+      setItem: (k,v) => { mem[k] = String(v); },
+      removeItem: k => { delete mem[k]; }
+    };
+  }
+})();
+
+/* ---------- Helpers ---------- */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtNum = n => n >= 1e9 ? (n/1e9).toFixed(1).replace(/\.0$/,'') + 'B'
+              : n >= 1e6 ? (n/1e6).toFixed(1).replace(/\.0$/,'') + 'M'
+              : n >= 1e3 ? (n/1e3).toFixed(1).replace(/\.0$/,'') + 'K'
+              : String(n);
+const debounce = (fn, ms) => {
+  let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+};
+
+/* ---------- Categories ---------- */
+const CATS = [
+  { id:'all',         name:'الكل',        icon:'i-spark' },
+  { id:'games',       name:'ألعاب',       icon:'i-bolt' },
+  { id:'social',      name:'تواصل',       icon:'i-user' },
+  { id:'tools',       name:'أدوات',       icon:'i-info' },
+  { id:'productivity',name:'إنتاجية',     icon:'i-check' },
+  { id:'entertainment',name:'ترفيه',      icon:'i-fire' },
+  { id:'education',   name:'تعليم',       icon:'i-award' },
+  { id:'photography', name:'تصوير',       icon:'i-spark' },
+  { id:'music',       name:'موسيقى',      icon:'i-bolt' },
+  { id:'business',    name:'أعمال',       icon:'i-clock' },
+  { id:'health',      name:'صحة',         icon:'i-heart' }
+];
+
+/* ---------- App Data (30 apps) ---------- */
+const APPS = [
+  { id:'whatsapp', name:'واتساب', en:'WhatsApp', dev:'Meta Platforms', cat:'social',
+    rating:4.7, reviews:184230000, size:'48 MB', sizeMB:48, downloads:5400000000,
+    version:'2.25.18.75', updated:'منذ 3 أيام', age:'+12',
+    c1:'#25D366', c2:'#128C7E', letter:'و',
+    tagline:'تواصل بسيط وآمن ومجاني',
+    desc:'واتساب هو تطبيق مراسلة مجاني وسريع ومتاح على الهواتف الذكية في جميع أنحاء العالم. أرسل الرسائل، أجرِ المكالمات، شارك الصور والفيديوهات، وتواصل مع أصدقائك وعائلتك بأمان عبر التشفير التام.',
+    shots:['#25D366','#128C7E','#075E54'], hot:true, editor:true },
+
+  { id:'facebook', name:'فيسبوك', en:'Facebook', dev:'Meta Platforms', cat:'social',
+    rating:4.4, reviews:142560000, size:'78 MB', sizeMB:78, downloads:5000000000,
+    version:'481.0.0.32', updated:'منذ يومين', age:'+12',
+    c1:'#1877F2', c2:'#0E5A8A', letter:'ف',
+    tagline:'تواصل مع من تحب',
+    desc:'ابقَ على تواصل مع الأصدقاء والعائلة، اكتشف الأخبار والمجتمعات التي تهمك، وشارك لحظاتك مع من تحب.',
+    shots:['#1877F2','#4267B2','#0E5A8A'], hot:true },
+
+  { id:'instagram', name:'إنستغرام', en:'Instagram', dev:'Meta Platforms', cat:'social',
+    rating:4.5, reviews:132900000, size:'62 MB', sizeMB:62, downloads:4500000000,
+    version:'342.0.0.21', updated:'منذ 4 أيام', age:'+12',
+    c1:'#E1306C', c2:'#833AB4', letter:'إ',
+    tagline:'شارك لحظاتك مع العالم',
+    desc:'استكشف صوراً وفيديوهات مذهلة من مبدعين حول العالم، شارك لحظاتك عبر القصص والريلز، وتواصل مع مجتمعك.',
+    shots:['#E1306C','#833AB4','#F56040'], hot:true },
+
+  { id:'telegram', name:'تيليجرام', en:'Telegram', dev:'Telegram FZ-LLC', cat:'social',
+    rating:4.6, reviews:78540000, size:'58 MB', sizeMB:58, downloads:1500000000,
+    version:'11.4.2', updated:'منذ يوم', age:'+16',
+    c1:'#2AABEE', c2:'#229ED9', letter:'ت',
+    tagline:'سريع، آمن، وقوي',
+    desc:'تيليجرام تطبيق مراسلة يركز على السرعة والأمان. يدعم المجموعات الكبيرة، القنوات، البوتات، والملفات بحجم يصل إلى 2 جيجابايت.',
+    shots:['#2AABEE','#229ED9','#0088CC'], editor:true },
+
+  { id:'snapchat', name:'سناب شات', en:'Snapchat', dev:'Snap Inc.', cat:'social',
+    rating:4.3, reviews:54200000, size:'92 MB', sizeMB:92, downloads:1200000000,
+    version:'13.12.0.32', updated:'منذ 5 أيام', age:'+12',
+    c1:'#FFFC00', c2:'#F7B500', letter:'س', dark:true,
+    tagline:'شارك اللحظة',
+    desc:'التقط اللحظة، أضف فلتراً، وأرسلها لأصدقائك. سناب شات يجعل التواصل أكثر متعة بفضل الكاميرا الذكية والفلاتر الإبداعية.',
+    shots:['#FFFC00','#F7B500','#FFD500'] },
+
+  { id:'tiktok', name:'تيك توك', en:'TikTok', dev:'ByteDance', cat:'entertainment',
+    rating:4.4, reviews:68400000, size:'215 MB', sizeMB:215, downloads:3000000000,
+    version:'38.5.4', updated:'منذ يومين', age:'+12',
+    c1:'#FE2C55', c2:'#25F4EE', letter:'ت',
+    tagline:'فيديوهات قصيرة لا تنتهي',
+    desc:'اكتشف ملايين الفيديوهات القصيرة المضحكة والإبداعية من كل أنحاء العالم، أو شارك فيديوهاتك الخاصة مع مجتمعك.',
+    shots:['#FE2C55','#25F4EE','#000000'], hot:true },
+
+  { id:'youtube', name:'يوتيوب', en:'YouTube', dev:'Google LLC', cat:'entertainment',
+    rating:4.5, reviews:126400000, size:'120 MB', sizeMB:120, downloads:10000000000,
+    version:'19.42.36', updated:'منذ 3 أيام', age:'+12',
+    c1:'#FF0000', c2:'#CC0000', letter:'ي',
+    tagline:'شاهد ما تحب',
+    desc:'شاهد ملايين الفيديوهات من كل مكان في العالم: موسيقى، أفلام، تعليم، رياضة، وترفيه — كل ذلك مجاناً.',
+    shots:['#FF0000','#CC0000','#990000'], hot:true, editor:true },
+
+  { id:'netflix', name:'نتفليكس', en:'Netflix', dev:'Netflix, Inc.', cat:'entertainment',
+    rating:4.3, reviews:38500000, size:'34 MB', sizeMB:34, downloads:1000000000,
+    version:'8.122.1', updated:'منذ 6 أيام', age:'+16',
+    c1:'#E50914', c2:'#B1060F', letter:'ن',
+    tagline:'أفلام ومسلسلات بلا حدود',
+    desc:'استمتع بمشاهدة أفضل الأفلام والمسلسلات والأفلام الوثائقية بجودة عالية على جوالك أو تلفازك، مع إمكانية التحميل للمشاهدة دون اتصال.',
+    shots:['#E50914','#B1060F','#831010'] },
+
+  { id:'spotify', name:'سبوتيفاي', en:'Spotify', dev:'Spotify AB', cat:'music',
+    rating:4.4, reviews:42800000, size:'32 MB', sizeMB:32, downloads:1000000000,
+    version:'8.9.78', updated:'منذ 4 أيام', age:'+12',
+    c1:'#1DB954', c2:'#1AA34A', letter:'س',
+    tagline:'موسيقى وبودكاست مجاناً',
+    desc:'استمع لملايين الأغاني والبودكاست مجاناً، أنشئ قوائم تشغيل خاصة بك، واكتشف فنانين جدد بناءً على ذوقك.',
+    shots:['#1DB954','#1AA34A','#128A3A'], editor:true },
+
+  { id:'anghami', name:'أنغامي', en:'Anghami', dev:'Anghami Inc.', cat:'music',
+    rating:4.2, reviews:8940000, size:'42 MB', sizeMB:42, downloads:100000000,
+    version:'6.5.12', updated:'منذ أسبوع', age:'+12',
+    c1:'#8B2FC9', c2:'#5B1F87', letter:'أ',
+    tagline:'موسيقى عربية بلا حدود',
+    desc:'أكبر مكتبة موسيقية عربية وإقليمية، مع ملايين الأغاني العربية والأجنبية والبودكاست الحصري.',
+    shots:['#8B2FC9','#5B1F87','#3D1459'] },
+
+  { id:'canva', name:'كانفا', en:'Canva', dev:'Canva', cat:'photography',
+    rating:4.6, reviews:18700000, size:'68 MB', sizeMB:68, downloads:500000000,
+    version:'2.277.0', updated:'منذ يومين', age:'+3',
+    c1:'#00C4CC', c2:'#7D2AE8', letter:'ك',
+    tagline:'صمم أي شيء بسهولة',
+    desc:'صمم منشورات، عروض تقديمية، شعارات، وبطاقات بسهولة تامة مع آلاف القوالب الاحترافية الجاهزة.',
+    shots:['#00C4CC','#7D2AE8','#FF6B6B'], editor:true },
+
+  { id:'psx', name:'فوتوشوب إكسبريس', en:'Photoshop Express', dev:'Adobe', cat:'photography',
+    rating:4.1, reviews:5230000, size:'86 MB', sizeMB:86, downloads:100000000,
+    version:'11.6.180', updated:'منذ 5 أيام', age:'+3',
+    c1:'#31A8FF', c2:'#001E36', letter:'ف',
+    tagline:'حرر صورك باحترافية',
+    desc:'حرر صورك باحترافية باستخدام أدوات متقدمة، وطبّق فلاتر، وأزل الخلفية، واعمل مع ملفات RAW مباشرة من جوالك.',
+    shots:['#31A8FF','#001E36','#001E36'] },
+
+  { id:'word', name:'مايكروسوفت وورد', en:'Microsoft Word', dev:'Microsoft Corporation', cat:'productivity',
+    rating:4.5, reviews:29400000, size:'115 MB', sizeMB:115, downloads:1000000000,
+    version:'16.0.18227', updated:'منذ 3 أيام', age:'+3',
+    c1:'#2B579A', c2:'#1E3F6F', letter:'و',
+    tagline:'حرر مستنداتك من أي مكان',
+    desc:'أنشئ وحرر مستندات احترافية من جوالك، مع دعم كامل للتنسيقات، والرسوم البيانية، والتعاون في الوقت الحقيقي.',
+    shots:['#2B579A','#1E3F6F','#16305A'] },
+
+  { id:'drive', name:'جوجل درايف', en:'Google Drive', dev:'Google LLC', cat:'productivity',
+    rating:4.5, reviews:34100000, size:'58 MB', sizeMB:58, downloads:5000000000,
+    version:'2.24.482.05', updated:'منذ يومين', age:'+3',
+    c1:'#0F9D58', c2:'#0A6B3D', letter:'د',
+    tagline:'مساحتك السحابية الآمنة',
+    desc:'خزّن ملفاتك بأمان على السحابة، وتصل إليها من أي جهاز، وشاركها مع الآخرين بسهولة، مع 15 جيجابايت مجانية.',
+    shots:['#0F9D58','#0A6B3D','#F4B400'], hot:true },
+
+  { id:'notion', name:'نوشن', en:'Notion', dev:'Notion Labs, Inc.', cat:'productivity',
+    rating:4.6, reviews:4560000, size:'76 MB', sizeMB:76, downloads:50000000,
+    version:'0.8.42', updated:'منذ يوم', age:'+3',
+    c1:'#000000', c2:'#4F4F4F', letter:'ن',
+    tagline:'كل شيء في مكان واحد',
+    desc:'نظّم ملاحظاتك، مشاريعك، مهامك، وحياتك كلها في مساحة عمل واحدة قابلة للتخصيص بالكامل.',
+    shots:['#000000','#4F4F4F','#8C8C8C'], editor:true },
+
+  { id:'camscanner', name:'كام سكانر', en:'CamScanner', dev:'INTSIG', cat:'tools',
+    rating:4.4, reviews:13800000, size:'92 MB', sizeMB:92, downloads:500000000,
+    version:'6.60.0.241226', updated:'منذ أسبوع', age:'+3',
+    c1:'#4A90E2', c2:'#2C5F8A', letter:'ك',
+    tagline:'امسح أي مستند بجوالك',
+    desc:'حوّل جوالك إلى ماسح ضوئي محمول: امسح المستندات، استخرج النص بالـ OCR، وحوّل الصور إلى PDF.',
+    shots:['#4A90E2','#2C5F8A','#1E4260'] },
+
+  { id:'chrome', name:'جوجل كروم', en:'Google Chrome', dev:'Google LLC', cat:'tools',
+    rating:4.4, reviews:87200000, size:'142 MB', sizeMB:142, downloads:10000000000,
+    version:'131.0.6778', updated:'منذ يومين', age:'+3',
+    c1:'#4285F4', c2:'#34A853', letter:'ك',
+    tagline:'متصفح سريع وآمن',
+    desc:'تصفح الإنترنت بسرعة وأمان، مع مزامنة الإشارات والعلامات بين كل أجهزتك، ووضع التصفح المتخفي.',
+    shots:['#4285F4','#34A853','#FBBC05'], hot:true },
+
+  { id:'files', name:'ملفات جوجل', en:'Files by Google', dev:'Google LLC', cat:'tools',
+    rating:4.5, reviews:11200000, size:'24 MB', sizeMB:24, downloads:500000000,
+    version:'1.4821.0', updated:'منذ 3 أيام', age:'+3',
+    c1:'#4285F4', c2:'#1967D2', letter:'م',
+    tagline:'نظّف جوالك ووفّر مساحة',
+    desc:'حرر مساحة من جوالك، ونظّف الملفات غير المرغوب فيها، وشارك الملفات دون اتصال بالإنترنت بسرعة مذهلة.',
+    shots:['#4285F4','#1967D2','#0B57D0'] },
+
+  { id:'duolingo', name:'دولينجو', en:'Duolingo', dev:'Duolingo', cat:'education',
+    rating:4.7, reviews:24500000, size:'42 MB', sizeMB:42, downloads:500000000,
+    version:'5.157.3', updated:'منذ يوم', age:'+3',
+    c1:'#58CC02', c2:'#3A8E01', letter:'د',
+    tagline:'تعلّم اللغات مجاناً',
+    desc:'تعلّم الإنجليزية، الإسبانية، الفرنسية، وغيرها بطريقة ممتعة ومجانية تماماً عبر دروس قصيرة تفاعلية.',
+    shots:['#58CC02','#3A8E01','#FEEC3E'], editor:true, hot:true },
+
+  { id:'coursera', name:'كورسيرا', en:'Coursera', dev:'Coursera, Inc.', cat:'education',
+    rating:4.3, reviews:6120000, size:'38 MB', sizeMB:38, downloads:50000000,
+    version:'4.46.0', updated:'منذ 5 أيام', age:'+3',
+    c1:'#0056D2', c2:'#003D99', letter:'ك',
+    tagline:'تعلّم من أفضل الجامعات',
+    desc:'احصل على دورات معتمدة من أفضل الجامعات والشركات العالمية، وتعلّم بوتيرتك مع شهادات معترف بها.',
+    shots:['#0056D2','#003D99','#002B70'] },
+
+  { id:'ted', name:'تيد', en:'TED', dev:'TED Conferences', cat:'education',
+    rating:4.6, reviews:2380000, size:'28 MB', sizeMB:28, downloads:30000000,
+    version:'5.12.0', updated:'منذ أسبوع', age:'+3',
+    c1:'#E62B1E', c2:'#A81E14', letter:'ت',
+    tagline:'أفكار تستحق الانتشار',
+    desc:'شاهد آلاف المحادثات الملهمة من مفكرين وعلماء وقادة عالميين، مع ترجمات عربية لأغلب المحادثات.',
+    shots:['#E62B1E','#A81E14','#780F0A'] },
+
+  { id:'pubg', name:'ببجي موبايل', en:'PUBG Mobile', dev:'Level Infinite', cat:'games',
+    rating:4.3, reviews:62800000, size:'1.2 GB', sizeMB:1200, downloads:1500000000,
+    version:'3.5.0', updated:'منذ 4 أيام', age:'+16',
+    c1:'#F2A900', c2:'#8B5A00', letter:'ب',
+    tagline:'المعركة الملكية الأقوى',
+    desc:'انزل في جزيرة مهجورة مع 100 لاعب، اجمع الأسلحة، وكن آخر من يبقى حياً في أقوى معركة ملكية على الجوال.',
+    shots:['#F2A900','#8B5A00','#4A2F00'], hot:true },
+
+  { id:'freefire', name:'فري فاير', en:'Free Fire', dev:'Garena', cat:'games',
+    rating:4.2, reviews:78400000, size:'850 MB', sizeMB:850, downloads:1500000000,
+    version:'1.107.1', updated:'منذ 3 أيام', age:'+12',
+    c1:'#FF7A00', c2:'#B33000', letter:'ف',
+    tagline:'10 دقائق، 50 لاعباً، بقاء واحد',
+    desc:'مبارزات سريعة في 10 دقائق بين 50 لاعباً، مع شخصيات فريدة، حيوانات أليفة، وخرائط متعددة.',
+    shots:['#FF7A00','#B33000','#5C1A00'], hot:true },
+
+  { id:'cod', name:'كول أوف ديوتي موبايل', en:'Call of Duty: Mobile', dev:'Activision', cat:'games',
+    rating:4.3, reviews:32100000, size:'1.8 GB', sizeMB:1800, downloads:500000000,
+    version:'1.0.51', updated:'منذ يومين', age:'+16',
+    c1:'#0E1B2C', c2:'#3A4A63', letter:'ك',
+    tagline:'حرب حديثة على جوالك',
+    desc:'استمتع بتجربة أكشن واقعية مع أوضاع متعددة: معركة ملكية، مواجهة، وحرب الجماعات، مع أسلحة وخرائط أسطورية.',
+    shots:['#0E1B2C','#3A4A63','#7A8AA3'] },
+
+  { id:'coc', name:'كلاش أوف كلانس', en:'Clash of Clans', dev:'Supercell', cat:'games',
+    rating:4.4, reviews:84200000, size:'310 MB', sizeMB:310, downloads:500000000,
+    version:'16.386.11', updated:'منذ 5 أيام', age:'+7',
+    c1:'#C69B4C', c2:'#8B6A2B', letter:'ك',
+    tagline:'ابنِ قريتك ودافع عنها',
+    desc:'ابنِ قريتك، درّب قواتك، وهاجم قرى الأعداء في واحدة من أشهر ألعاب الاستراتيجية على الجوال.',
+    shots:['#C69B4C','#8B6A2B','#5C4218'] },
+
+  { id:'minecraft', name:'ماين كرافت', en:'Minecraft', dev:'Mojang', cat:'games',
+    rating:4.6, reviews:42800000, size:'680 MB', sizeMB:680, downloads:50000000,
+    version:'1.21.44', updated:'منذ 6 أيام', age:'+3',
+    c1:'#62B47A', c2:'#3E6B4F', letter:'م',
+    tagline:'ابنِ عالمك الخاص',
+    desc:'استكشف عالماً مفتوحاً لا نهائياً، ابنِ منازل وقلاعاً، واجمع الموارد، وانجُ من الليل والمخلوقات في لعبة الأسطورة.',
+    shots:['#62B47A','#3E6B4F','#8B5A2B'], editor:true, hot:true },
+
+  { id:'fitbit', name:'فيت بيت', en:'Fitbit', dev:'Google LLC', cat:'health',
+    rating:4.3, reviews:1870000, size:'52 MB', sizeMB:52, downloads:50000000,
+    version:'4.33.0', updated:'منذ 4 أيام', age:'+3',
+    c1:'#00B0B9', c2:'#007A82', letter:'ف',
+    tagline:'صحتك في متناول يدك',
+    desc:'تابع نشاطك اليومي، ونومك، وسعراتك، ونبضات قلبك، وحقّق أهدافك الصحية مع تتبع شامل ودقيق.',
+    shots:['#00B0B9','#007A82','#005A61'] },
+
+  { id:'headspace', name:'هيد سبيس', en:'Headspace', dev:'Headspace Inc.', cat:'health',
+    rating:4.5, reviews:2840000, size:'98 MB', sizeMB:98, downloads:30000000,
+    version:'4.282.0', updated:'منذ أسبوع', age:'+3',
+    c1:'#F47D31', c2:'#B35415', letter:'ه',
+    tagline:'تأمل واسترخِ',
+    desc:'تعلّم التأمل والتنفس، وقلّل التوتر، وحسّن نومك مع تمارين صوتية موجّهة بالعربية والإنجليزية.',
+    shots:['#F47D31','#B35415','#7A2F0C'] },
+
+  { id:'linkedin', name:'لينكد إن', en:'LinkedIn', dev:'LinkedIn Corporation', cat:'business',
+    rating:4.2, reviews:12400000, size:'92 MB', sizeMB:92, downloads:1000000000,
+    version:'4.1.1082', updated:'منذ 3 أيام', age:'+3',
+    c1:'#0A66C2', c2:'#004182', letter:'ل',
+    tagline:'شبكتك المهنية',
+    desc:'ابنِ شبكتك المهنية، ابحث عن فرص عمل، وتواصل مع المحترفين في مجالك، وطوّر مسيرتك.',
+    shots:['#0A66C2','#004182','#002A54'], hot:true },
+
+  { id:'zoom', name:'زوم', en:'Zoom', dev:'Zoom Video Communications', cat:'business',
+    rating:4.4, reviews:5840000, size:'64 MB', sizeMB:64, downloads:500000000,
+    version:'6.2.11', updated:'منذ يومين', age:'+3',
+    c1:'#2D8CFF', c2:'#1B5BB0', letter:'ز',
+    tagline:'اجتماعات فيديو موثوقة',
+    desc:'أجرِ اجتماعات فيديو عالية الجودة، اعرض شاشتك، وسجّل الاجتماع، مع دعم يصل إلى 1000 مشارك.',
+    shots:['#2D8CFF','#1B5BB0','#0F3D82'] }
+];
+
+/* ---------- State ---------- */
+const state = {
+  view: 'home',
+  category: 'all',
+  query: '',
+  sort: 'popular',
+  favorites: new Set(JSON.parse(store.getItem('apk_fav') || '[]')),
+  recentSearches: JSON.parse(store.getItem('apk_searches') || '[]'),
+  installing: {},
+  counters: {}
+};
+
+/* ---------- Apply theme early ---------- */
+(function initTheme(){
+  const saved = store.getItem('apk_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+})();
+
+/* ---------- Category name lookup ---------- */
+const catName = id => (CATS.find(c => c.id === id) || {}).name || id;
+
+/* ---------- Filter + Sort ---------- */
+function filtered(){
+  let arr = APPS.slice();
+  if (state.category !== 'all') arr = arr.filter(a => a.cat === state.category);
+  if (state.query.trim()) {
+    const q = state.query.trim().toLowerCase();
+    arr = arr.filter(a =>
+      a.name.toLowerCase().includes(q) ||
+      (a.en || '').toLowerCase().includes(q) ||
+      a.dev.toLowerCase().includes(q) ||
+      a.tagline.toLowerCase().includes(q)
+    );
+  }
+  if (state.view === 'favorites') arr = arr.filter(a => state.favorites.has(a.id));
+  switch (state.sort) {
+    case 'rating':  arr.sort((a,b) => b.rating - a.rating); break;
+    case 'newest':  arr.sort((a,b) => a.updated.localeCompare(b.updated)); break;
+    case 'small':   arr.sort((a,b) => a.sizeMB - b.sizeMB); break;
+    case 'downloads': arr.sort((a,b) => b.downloads - a.downloads); break;
+    default: arr.sort((a,b) => b.downloads - a.downloads);
+  }
+  return arr;
+}
+
+/* ---------- Icon HTML ---------- */
+function iconHTML(app, size){
+  const dark = app.dark ? 'color:#000' : 'color:#fff';
+  const cls = size === 'lg' ? 'app-icon lg' : size === 'sm' ? 'app-icon sm' : 'app-icon';
+  return `<div class="${cls}" style="background:linear-gradient(135deg,${app.c1},${app.c2});${dark}">${esc(app.letter)}</div>`;
+}
+
+/* ---------- App card HTML ---------- */
+function cardHTML(app){
+  const isFav = state.favorites.has(app.id);
+  return `
+    <article class="app-card" data-open="${app.id}">
+      ${iconHTML(app)}
+      <div class="app-info">
+        <h3>${esc(app.name)}</h3>
+        <div class="dev">${esc(app.dev)}</div>
+        <div class="app-meta">
+          <span class="star">★ ${app.rating}</span>
+          <span class="dot">·</span>
+          <span>${esc(app.size)}</span>
+        </div>
+      </div>
+      <button class="fav-btn ${isFav?'on':''}" data-fav="${app.id}" aria-label="مفضلة">
+        <svg style="width:14px;height:14px"><use href="#i-heart${isFav?'-fill':''}"/></svg>
+      </button>
+    </article>`;
+}
+
+/* ---------- Chart item HTML ---------- */
+function chartHTML(app, idx){
+  return `
+    <div class="chart-item" data-open="${app.id}">
+      <div class="rank ${idx<3?'top':''}">${idx+1}</div>
+      ${iconHTML(app)}
+      <div class="app-info">
+        <h3>${esc(app.name)}</h3>
+        <div class="dev">${esc(app.dev)}</div>
+        <div class="app-meta">
+          <span class="star">★ ${app.rating}</span>
+          <span class="dot">·</span>
+          <span>${fmtNum(app.downloads)} تحميل</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ---------- Horizontal card HTML ---------- */
+function hCardHTML(app){
+  return `
+    <div class="h-card" data-open="${app.id}">
+      ${app.editor ? '<span class="badge-editor">اختيار المحرر</span>' : (app.hot ? '<span class="badge-new">رائج</span>' : '')}
+      ${iconHTML(app)}
+      <h3>${esc(app.name)}</h3>
+      <div class="dev">${esc(app.dev)}</div>
+      <div class="app-meta">
+        <span class="star">★ ${app.rating}</span>
+        <span class="dot">·</span>
+        <span>${esc(app.size)}</span>
+      </div>
+    </div>`;
+}
+
+/* ---------- Hero ---------- */
+function heroHTML(app){
+  return `
+    <section class="hero">
+      <div class="hero-inner">
+        ${iconHTML(app, 'lg')}
+        <div class="hero-text">
+          <span class="hero-tag">⚡ تطبيق اليوم</span>
+          <h1>${esc(app.name)}</h1>
+          <p>${esc(app.tagline)}</p>
+          <div class="hero-meta">
+            <span><b>★ ${app.rating}</b> (${fmtNum(app.reviews)})</span>
+            <span>· <b>${fmtNum(app.downloads)}</b> تحميل</span>
+            <span>· <b>${esc(app.size)}</b></span>
+          </div>
+          <div class="hero-actions">
+            <button class="btn btn-primary" data-install="${app.id}">
+              <svg><use href="#i-download"/></svg> تثبيت الآن
+            </button>
+            <button class="btn btn-ghost" data-open="${app.id}">
+              <svg><use href="#i-info"/></svg> التفاصيل
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>`;
+}
+
+/* ---------- Categories strip ---------- */
+function catsHTML(){
+  return `<div class="cats-row">${CATS.map(c => `
+    <button class="chip ${state.category===c.id?'on':''}" data-cat="${c.id}">
+      <svg><use href="#${c.icon}"/></svg>${c.name}
+    </button>`).join('')}</div>`;
+}
+
+/* ---------- Section header ---------- */
+function secHead(icon, title, actionHTML){
+  return `
+    <div class="sec-head">
+      <h2><svg><use href="#${icon}"/></svg>${title}</h2>
+      ${actionHTML || ''}
+    </div>`;
+}
+
+/* ---------- Empty state ---------- */
+function emptyHTML(msg){
+  return `
+    <div class="empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <h3>${esc(msg.title)}</h3>
+      <p>${esc(msg.sub)}</p>
+    </div>`;
+}
+
+/* ---------- Views ---------- */
+function renderHome(){
+  const featured = APPS.find(a => a.editor && a.hot) || APPS[0];
+  const top10 = [...APPS].sort((a,b) => b.downloads - a.downloads).slice(0, 8);
+  const editors = APPS.filter(a => a.editor);
+  const newest = [...APPS].sort((a,b) => b.rating - a.rating).slice(0, 8);
+  const trend = [...APPS].sort((a,b) => b.reviews - a.reviews).slice(0, 6);
+
+  return `
+    ${heroHTML(featured)}
+    ${catsHTML()}
+
+    <section class="sec">
+      ${secHead('i-fire','الأكثر تحميلاً','<a class="sec-link" data-view-jump="trending">عرض الكل <svg style="width:14px;height:14px"><use href="#i-chev"/></svg></a>')}
+      <div class="chart-grid">${top10.map((a,i) => chartHTML(a,i)).join('')}</div>
+    </section>
+
+    <section class="sec">
+      ${secHead('i-award','اختيار المحرر')}
+      <div class="h-scroll">${editors.map(hCardHTML).join('')}</div>
+    </section>
+
+    <section class="sec">
+      ${secHead('i-spark','الأعلى تقييماً')}
+      <div class="grid">${newest.map(cardHTML).join('')}</div>
+    </section>
+
+    <section class="sec">
+      ${secHead('i-bolt','رائج هذا الأسبوع')}
+      <div class="h-scroll">${trend.map(hCardHTML).join('')}</div>
+    </section>`;
+}
+
+function renderCategories(){
+  return `
+    ${catsHTML()}
+    <section class="sec">
+      ${secHead('i-grid', state.category==='all' ? 'كل التطبيقات' : 'تصنيف: ' + catName(state.category))}
+      <div class="toolbar">
+        <select class="select" id="sortSel">
+          <option value="popular" ${state.sort==='popular'?'selected':''}>الأكثر شعبية</option>
+          <option value="rating"  ${state.sort==='rating'?'selected':''}>الأعلى تقييماً</option>
+          <option value="newest"  ${state.sort==='newest'?'selected':''}>الأحدث</option>
+          <option value="small"   ${state.sort==='small'?'selected':''}>الأصغر حجماً</option>
+        </select>
+        <span class="count-badge">${filtered().length} تطبيق</span>
+      </div>
+      ${filtered().length ? `<div class="grid">${filtered().map(cardHTML).join('')}</div>` : emptyHTML({title:'لا توجد تطبيقات', sub:'جرّب تصنيفاً آخر أو امسح الفلاتر'})}
+    </section>`;
+}
+
+function renderTrending(){
+  const sorted = [...APPS].sort((a,b) => b.downloads - a.downloads);
+  const topChart = sorted.slice(0, 10);
+  const rated = [...APPS].sort((a,b) => b.rating - a.rating).slice(0, 10);
+  const fresh = [...APPS].slice().reverse().slice(0, 10);
+
+  return `
+    ${secHead('i-fire','لوحة الصدارة')}
+    <section class="sec" style="margin-top:0">
+      ${secHead('i-bolt','الأكثر تحميلاً')}
+      <div class="chart-grid">${topChart.map((a,i) => chartHTML(a,i)).join('')}</div>
+    </section>
+    <section class="sec">
+      ${secHead('i-star','الأعلى تقييماً')}
+      <div class="grid">${rated.slice(0,8).map(cardHTML).join('')}</div>
+    </section>
+    <section class="sec">
+      ${secHead('i-clock','إصدارات جديدة')}
+      <div class="grid">${fresh.slice(0,8).map(cardHTML).join('')}</div>
+    </section>`;
+}
+
+function renderFavorites(){
+  if (!state.favorites.size) {
+    return emptyHTML({title:'لا يوجد مفضلات بعد', sub:'اضغط ♡ على أي تطبيق لإضافته هنا'});
+  }
+  const favs = APPS.filter(a => state.favorites.has(a.id));
+  return `
+    ${secHead('i-heart','تطبيقاتي المفضلة')}
+    <div class="grid">${favs.map(cardHTML).join('')}</div>`;
+}
+
+/* ---------- Render ---------- */
+function render(){
+  const area = $('#dynamicArea');
+  const map = { home: renderHome, categories: renderCategories, trending: renderTrending, favorites: renderFavorites };
+  const fn = map[state.view] || renderHome;
+  area.innerHTML = fn();
+
+  // Sync nav
+  $$('.bnav button').forEach(b => b.classList.toggle('on', b.dataset.view === state.view));
+  // Sync fav badge
+  const cnt = state.favorites.size;
+  const favCountEl = $('#favCount');
+  const bnavBadge = $('#bnavBadge');
+  if (cnt > 0) {
+    favCountEl.textContent = cnt; favCountEl.style.display = 'grid';
+    bnavBadge.textContent = cnt; bnavBadge.style.display = 'grid';
+  } else {
+    favCountEl.style.display = 'none';
+    bnavBadge.style.display = 'none';
+  }
+}
+
+/* ---------- Toast ---------- */
+function toast(msg, type){
+  const t = $('#toast');
+  const color = type === 'ok' ? 'var(--ok)' : type === 'warn' ? 'var(--warn)' : type === 'err' ? 'var(--danger)' : 'var(--brand)';
+  t.innerHTML = `<svg style="color:${color}"><use href="#i-check"/></svg><span>${esc(msg)}</span>`;
+  t.classList.add('show');
+  clearTimeout(t._tm);
+  t._tm = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ---------- Modal ---------- */
+function openModal(id){
+  const app = APPS.find(a => a.id === id);
+  if (!app) return;
+  const isFav = state.favorites.has(app.id);
+  const related = APPS.filter(a => a.cat === app.cat && a.id !== app.id).slice(0, 6);
+
+  const panel = $('#modalPanel');
+  panel.innerHTML = `
+    <div class="modal-head">
+      <button class="modal-close" id="modalClose" aria-label="إغلاق"><svg style="width:18px;height:18px"><use href="#i-close"/></svg></button>
+      <div class="modal-app">
+        ${iconHTML(app, 'lg')}
+        <div class="modal-app-info">
+          <h2>${esc(app.name)}</h2>
+          <div class="dev">${esc(app.dev)}</div>
+        </div>
+      </div>
+      <div class="modal-stats">
+        <div><b>★ ${app.rating}</b><span>${fmtNum(app.reviews)} مراجعة</span></div>
+        <div><b>${fmtNum(app.downloads)}</b><span>تحميل</span></div>
+        <div><b>${esc(app.size)}</b><span>الحجم</span></div>
+        <div><b>${esc(app.age)}</b><span>الفئة العمرية</span></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-solid" data-install="${app.id}"><svg><use href="#i-download"/></svg> تثبيت</button>
+      <button class="btn btn-outline" data-fav="${app.id}">
+        <svg><use href="#i-heart${isFav?'-fill':''}"/></svg> ${isFav ? 'في المفضلة' : 'أضف للمفضلة'}
+      </button>
+      <button class="btn btn-outline" id="shareBtn"><svg><use href="#i-share"/></svg> مشاركة</button>
+    </div>
+    <div class="install-bar" id="installBar"><span></span></div>
+    <div class="modal-body">
+      <div class="blk">
+        <div class="blk-title"><svg><use href="#i-spark"/></svg>لقطات الشاشة</div>
+        <div class="shots">
+          ${(app.shots || [app.c1, app.c2, app.c1]).map((c,i) => `
+            <div class="shot" data-label="لقطة ${i+1}" style="background:linear-gradient(135deg,${c},${app.c2});"></div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="blk">
+        <div class="blk-title"><svg><use href="#i-info"/></svg>الوصف</div>
+        <p>${esc(app.desc)}</p>
+      </div>
+      <div class="blk">
+        <div class="blk-title"><svg><use href="#i-check"/></svg>المعلومات</div>
+        <div class="info-grid">
+          <div class="info-item"><span>الإصدار</span><b>${esc(app.version)}</b></div>
+          <div class="info-item"><span>الحجم</span><b>${esc(app.size)}</b></div>
+          <div class="info-item"><span>التصنيف</span><b>${esc(catName(app.cat))}</b></div>
+          <div class="info-item"><span>آخر تحديث</span><b>${esc(app.updated)}</b></div>
+        </div>
+      </div>
+      <div class="blk">
+        <div class="blk-title"><svg><use href="#i-star"/></svg>المراجعات</div>
+        ${[
+          {n:'أحمد م.', s:5, t:'منذ يومين', txt:'تطبيق ممتاز وسريع، أنصح به بشدة.'},
+          {n:'سارة ع.', s:4, t:'منذ أسبوع', txt:'جيد جداً لكن بعض الميزات تحتاج تحسين.'},
+          {n:'محمد ك.', s:5, t:'منذ 3 أيام', txt:'أفضل تطبيق في فئته بلا منافس.'}
+        ].map((r,i) => `
+          <div class="rev">
+            <div class="rev-avatar" style="background:linear-gradient(135deg,${app.c1},${app.c2})">${esc(r.n[0])}</div>
+            <div class="rev-body">
+              <header><b>${esc(r.n)}</b><time>${esc(r.t)}</time></header>
+              <div class="rev-stars">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</div>
+              <p>${esc(r.txt)}</p>
+            </div>
+          </div>`).join('')}
+      </div>
+      ${related.length ? `
+      <div class="blk">
+        <div class="blk-title"><svg><use href="#i-grid"/></svg>تطبيقات مشابهة</div>
+        <div class="rel-row">
+          ${related.map(r => `
+            <div class="rel-card" data-open="${r.id}">
+              ${iconHTML(r, 'sm')}
+              <b>${esc(r.name)}</b>
+              <span>★ ${r.rating}</span>
+            </div>`).join('')}
+        </div>
+      </div>` : ''}
+    </div>`;
+
+  $('#modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Bind close & actions inside modal
+  $('#modalClose').onclick = closeModal;
+  $('#shareBtn').onclick = () => {
+    const txt = `${app.name} — ${app.tagline}`;
+    if (navigator.share) {
+      navigator.share({ title: app.name, text: txt }).catch(() => {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(txt).then(() => toast('تم نسخ اسم التطبيق', 'ok')).catch(() => toast('تعذّر النسخ', 'err'));
+    } else {
+      toast('تم تجهيز المشاركة: ' + app.name, 'ok');
+    }
+  };
+}
+
+function closeModal(){
+  $('#modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ---------- Install Simulation ---------- */
+function installApp(id){
+  const app = APPS.find(a => a.id === id);
+  if (!app) return;
+  if (state.installing[id]) return;
+  state.installing[id] = true;
+  toast(`جارٍ تثبيت ${app.name}…`, 'brand');
+
+  const bar = $('#installBar');
+  if (bar) {
+    bar.classList.add('show');
+    const span = bar.querySelector('span');
+    let p = 0;
+    span.style.width = '0%';
+    const int = setInterval(() => {
+      p += Math.random() * 18 + 6;
+      if (p >= 100) { p = 100; clearInterval(int); setTimeout(finish, 400); }
+      span.style.width = p + '%';
+    }, 180);
+  } else {
+    setTimeout(finish, 1200);
+  }
+
+  function finish(){
+    state.installing[id] = false;
+    toast(`✓ تم تثبيت ${app.name} بنجاح`, 'ok');
+    if (bar) {
+      setTimeout(() => { bar.classList.remove('show'); bar.querySelector('span').style.width = '0%'; }, 600);
+    }
+  }
+}
+
+/* ---------- Favorites ---------- */
+function toggleFav(id){
+  const app = APPS.find(a => a.id === id);
+  if (!app) return;
+  if (state.favorites.has(id)) {
+    state.favorites.delete(id);
+    toast(`أُزيل ${app.name} من المفضلة`);
+  } else {
+    state.favorites.add(id);
+    toast(`أُضيف ${app.name} إلى المفضلة`, 'ok');
+  }
+  store.setItem('apk_fav', JSON.stringify([...state.favorites]));
+  render();
+  if ($('#modal').classList.contains('open')) openModal(id);
+}
+
+/* ---------- Search Suggestions ---------- */
+function updateSuggest(){
+  const s = $('#suggest');
+  const q = state.query.trim().toLowerCase();
+  if (!q) { s.classList.remove('show'); s.innerHTML = ''; return; }
+
+  const matches = APPS.filter(a =>
+    a.name.toLowerCase().includes(q) ||
+    (a.en || '').toLowerCase().includes(q) ||
+    a.dev.toLowerCase().includes(q)
+  ).slice(0, 6);
+
+  const recents = state.recentSearches.filter(r => r.toLowerCase().includes(q) && r.toLowerCase() !== q).slice(0, 3);
+
+  let html = '';
+  matches.forEach(a => {
+    html += `<div class="sug-item" data-open="${a.id}">
+      <svg><use href="#i-search"/></svg>
+      <span>${highlight(a.name, q)} — <small style="color:var(--muted)">${esc(a.dev)}</small></span>
+    </div>`;
+  });
+  recents.forEach(r => {
+    html += `<div class="sug-item" data-suggest="${esc(r)}">
+      <svg><use href="#i-clock"/></svg>
+      <span>${highlight(r, q)}</span>
+    </div>`;
+  });
+  if (!html) {
+    html = `<div class="sug-item" style="cursor:default;color:var(--muted)">لا توجد نتائج مطابقة</div>`;
+  }
+  s.innerHTML = html;
+  s.classList.add('show');
+
+  s.querySelectorAll('[data-suggest]').forEach(el => {
+    el.onclick = () => {
+      $('#search').value = el.dataset.suggest;
+      state.query = el.dataset.suggest;
+      s.classList.remove('show');
+      performSearch();
+    };
+  });
+}
+
+function highlight(text, q){
+  const idx = text.toLowerCase().indexOf(q);
+  if (idx < 0) return esc(text);
+  return esc(text.slice(0, idx)) + '<b>' + esc(text.slice(idx, idx + q.length)) + '</b>' + esc(text.slice(idx + q.length));
+}
+
+function performSearch(){
+  const q = state.query.trim();
+  if (q) {
+    state.recentSearches = [q, ...state.recentSearches.filter(x => x !== q)].slice(0, 8);
+    store.setItem('apk_searches', JSON.stringify(state.recentSearches));
+  }
+  if (state.view !== 'categories') {
+    state.view = 'categories';
+  }
+  render();
+}
+
+/* ---------- Global Event Delegation ---------- */
+document.addEventListener('click', e => {
+  const openEl = e.target.closest('[data-open]');
+  if (openEl && !e.target.closest('[data-fav]') && !e.target.closest('[data-install]')) {
+    e.preventDefault();
+    openModal(openEl.dataset.open);
+    return;
+  }
+
+  const favEl = e.target.closest('[data-fav]');
+  if (favEl) {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFav(favEl.dataset.fav);
+    return;
+  }
+
+  const instEl = e.target.closest('[data-install]');
+  if (instEl) {
+    e.preventDefault();
+    e.stopPropagation();
+    installApp(instEl.dataset.install);
+    return;
+  }
+
+  const catEl = e.target.closest('[data-cat]');
+  if (catEl) {
+    state.category = catEl.dataset.cat;
+    if (state.view === 'home') state.view = 'categories';
+    render();
+    return;
+  }
+
+  const jumpEl = e.target.closest('[data-view-jump]');
+  if (jumpEl) {
+    state.view = jumpEl.dataset.viewJump;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  // Close search suggestions if click outside
+  if (!e.target.closest('.search-wrap')) {
+    $('#suggest').classList.remove('show');
+  }
+
+  // Close modal if click on backdrop
+  if (e.target.id === 'modal') {
+    closeModal();
+  }
+});
+
+/* ---------- Search input ---------- */
+$('#search').addEventListener('input', debounce(e => {
+  state.query = e.target.value;
+  $('#searchClear').classList.toggle('show', !!state.query);
+  updateSuggest();
+  if (state.view === 'categories' || state.view === 'favorites') render();
+}, 180));
+
+$('#search').addEventListener('focus', () => {
+  if (state.query.trim()) updateSuggest();
+});
+
+$('#search').addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    $('#suggest').classList.remove('show');
+    performSearch();
+  }
+  if (e.key === 'Escape') {
+    $('#suggest').classList.remove('show');
+  }
+});
+
+$('#searchClear').onclick = () => {
+  $('#search').value = '';
+  state.query = '';
+  $('#searchClear').classList.remove('show');
+  $('#suggest').classList.remove('show');
+  render();
+};
+
+/* ---------- Theme toggle ---------- */
+$('#themeBtn').onclick = () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  store.setItem('apk_theme', next);
+  $('#themeIcon').innerHTML = `<use href="#${next === 'dark' ? 'i-sun' : 'i-moon'}"/>`;
+  toast(next === 'dark' ? '🌙 الوضع الداكن' : '☀️ الوضع الفاتح');
+};
+
+/* ---------- Fav button in header ---------- */
+$('#favBtn').onclick = () => {
+  state.view = 'favorites';
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+/* ---------- Bottom nav ---------- */
+$$('.bnav button').forEach(b => {
+  b.onclick = () => {
+    state.view = b.dataset.view;
+    if (state.view === 'home') state.category = 'all';
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+});
+
+/* ---------- Sort change (delegated) ---------- */
+document.addEventListener('change', e => {
+  if (e.target.id === 'sortSel') {
+    state.sort = e.target.value;
+    render();
+  }
+});
+
+/* ---------- To top ---------- */
+const toTop = $('#toTop');
+window.addEventListener('scroll', () => {
+  toTop.classList.toggle('show', window.scrollY > 400);
+}, { passive: true });
+toTop.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+/* ---------- Keyboard ---------- */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if ($('#modal').classList.contains('open')) closeModal();
+    else $('#suggest').classList.remove('show');
+  }
+});
+
+/* ---------- Init ---------- */
+(function initThemeIcon(){
+  const cur = document.documentElement.getAttribute('data-theme');
+  $('#themeIcon').innerHTML = `<use href="#${cur === 'dark' ? 'i-sun' : 'i-moon'}"/>`;
+})();
+
+render();
+
+/* Welcome toast (once per session) */
+if (!store.getItem('apk_welcomed')) {
+  setTimeout(() => toast('👋 أهلاً بك في Apk — اكتشف أفضل التطبيقات', 'brand'), 600);
+  store.setItem('apk_welcomed', '1');
+}
+</script>
+</body>
+</html>
